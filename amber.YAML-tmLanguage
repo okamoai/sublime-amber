@@ -1,0 +1,154 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Amber
+scopeName: source.amber
+fileTypes: ["amber"]
+uuid: cab3e23f-e508-40be-bef3-09d520647c0e
+
+patterns:
+
+- name: comment.block.amber
+  begin: ^(\s*)//
+  end: ^(?!(\1\s)|\s*$)
+
+- name: meta.amber.function
+  patterns:
+  - include: '#function-amber-general'
+  - include: '#function-amber-condition'
+  - include: '#function-amber-iteration'
+  - include: '#function-amber-mixin-definition'
+  - include: '#function-amber-mixin-call'
+
+- name: meta.amber.expression
+  begin: \#\{
+  end: \}
+  patterns:
+  - include: '#literal-operators'
+  - include: '#string-double-quoted'
+  - include: '#string-single-quoted'
+  - include: '#variable-amber'
+
+- name: meta.amber.variable
+  begin: ^\s*(\$[a-zA-Z_\-\.]+)
+  beginCaptures:
+    '1': {name: variable.other.amber}
+  end: \n
+  patterns:
+  - include: '#literal-operators'
+  - include: '#string-double-quoted'
+  - include: '#string-single-quoted'
+
+- name: meta.amber.condition.attribute
+  begin: ^\s*([\#\.][a-zA-Z0-9_\-\.]+)\s+(\?)
+  beginCaptures:
+    '2': {name: keyword.operator.amber}
+  end: \n
+  patterns:
+  - include: '#literal-operators'
+  - include: '#string-double-quoted'
+  - include: '#string-single-quoted'
+
+- name: meta.html.elemnt
+  patterns:
+  - include: '#tag-html-element'
+
+- name: meta.html.attribute
+  begin: \[
+  end: \]
+  patterns:
+  - include: '#tag-html-attribute'
+  - include: '#literal-operators'
+  - include: '#string-double-quoted'
+  - include: '#string-single-quoted'
+  - include: '#variable-amber'
+
+repository:
+
+  literal-operators:
+    name: keyword.operator.amber
+    match: (==|>=|<=|!=|=|\+|\-|%|\*|\/|\?|&&|\|\|)
+
+  string-double-quoted:
+    name: string.quoted.double
+    begin: '"'
+    end: '"'
+
+  string-single-quoted:
+    name: string.quoted.single
+    begin: "'"
+    end: "'"
+
+  variable-amber:
+    name: meta.amber.variable
+    match: (\$[a-zA-Z_\-\.]+)
+    captures:
+      '1': {name: variable.other.amber}
+
+  tag-html-element:
+    name: meta.html.element.name
+    match: ^\s*(abbr|address|area|article|aside|audio|a|base|bdi|bdo|blockquote|body|br|button|b|canvas|caption|cite|code|colgroup|col|data|datalist|dd|del|dfn|div|dl|dt|embed|em|fieldset|figcaption|figure|footer|form|h[1-6]|header|head|hr|html|iframe|img|input|ins|i|kbd|keygen|label|legend|link|li|main|MathML|map|mark|meta|meter|nav|noscript|object|ol|optgroup|option|output|p|param|pre|progress|q|rb|rp|rt|rtc|ruby|samp|script|section|select|small|source|span|strong|style|sub|sup|svg|s|table|tbody|td|template|textarea|tfoot|thead|th|time|title|tr|track|ul|u|var|video|wbr)
+    captures:
+      '1': {name: entity.name.tag.html}
+
+  tag-html-attribute:
+    name: meta.html.attribute.name
+    match: ([a-zA-Z\-:]+)(=?)
+    captures:
+      '1': {name: entity.other.attribute-name.html}
+      '2': {name: punctuation.definition.entity.html}
+
+  function-amber-argment:
+    name: meta.amber.function.argment
+    begin: \(
+    end: \)
+    patterns:
+      - name: variable.parameter
+        match: .+?
+
+  function-amber-general:
+    name: meta.amber.function.general
+    match: ^\s*(doctype|!!!|extends|block|import)
+    captures:
+      '1': {name: support.function.amber}
+
+  function-amber-condition:
+    name: meta.amber.function.condition
+    begin: ^\s*(if|else if|else)
+    beginCaptures:
+      '1': {name: support.function.amber}
+    end: \n
+    patterns:
+    - include: '#literal-operators'
+    - include: '#string-double-quoted'
+    - include: '#string-single-quoted'
+
+  function-amber-iteration:
+    name: meta.amber.function.iteration
+    begin: ^\s*(each).+?(in)
+    beginCaptures:
+      '1': {name: support.function.amber}
+      '2': {name: keyword.operator.amber}
+    end: \n
+
+  function-amber-mixin-definition:
+    name: meta.amber.function.mixin.definition
+    begin: ^\s*(mixin)
+    beginCaptures:
+      '1': {name: support.function.amber}
+    end: \n
+    patterns:
+      - include: '#function-amber-argment'
+      - include: '#string-double-quoted'
+      - include: '#string-single-quoted'
+
+  function-amber-mixin-call:
+    name: meta.amber.function.mixin.call
+    begin: ^\s*(\+[a-zA-Z0-9_\-]+)
+    beginCaptures:
+      '1': {name: entity.name.function.amber}
+    end: \n
+    patterns:
+      - include: '#literal-operators'
+      - include: '#string-double-quoted'
+      - include: '#string-single-quoted'
+...
